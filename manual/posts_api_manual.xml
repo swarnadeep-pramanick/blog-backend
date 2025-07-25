@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api>
+  <resource name="Post">
+    <description>
+      Endpoints for creating, updating, retrieving, and deleting posts.
+      Posts can include text, tags, and media (images/videos).
+      All endpoints except GET require authentication via Bearer token.
+    </description>
+
+    <endpoint method="POST" path="/posts">
+      <summary>Create a new post</summary>
+      <authentication>Required</authentication>
+      <contentType>multipart/form-data</contentType>
+      <validation>
+        <field name="title" type="string" required="true" />
+        <field name="content" type="string" required="true" />
+        <field name="tags" type="string" required="false" description="Comma-separated or JSON array" />
+        <field name="media" type="file[]" required="false" description="One or more image/video files" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+POST /posts
+Headers:
+  Authorization: Bearer <token>
+Body (form-data):
+  title: "My First Post"
+  content: "This is the content of my first post."
+  tags: ["introduction","welcome"]
+  media: (file) image1.png
+  media: (file) video1.mp4
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "id": 1,
+  "title": "My First Post",
+  "content": "This is the content of my first post.",
+  "tags": ["introduction", "welcome"],
+  "images": ["uploads/media-1712345678901-123456789.png"],
+  "videos": ["uploads/media-1712345678902-987654321.mp4"],
+  "authorId": 2,
+  "author": {
+    "id": 2,
+    "name": "Jane Doe",
+    "email": "jane@example.com"
+  },
+  "createdAt": "2024-07-24T12:34:56.789Z",
+  "updatedAt": "2024-07-24T12:34:56.789Z"
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="PUT" path="/posts/:id">
+      <summary>Update a post</summary>
+      <authentication>Required</authentication>
+      <contentType>multipart/form-data</contentType>
+      <validation>
+        <field name="title" type="string" required="false" />
+        <field name="content" type="string" required="false" />
+        <field name="tags" type="string" required="false" />
+        <field name="media" type="file[]" required="false" description="New image/video files" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+PUT /posts/1
+Headers:
+  Authorization: Bearer <token>
+Body (form-data):
+  title: "Updated Post"
+  media: (file) newimage.png
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "id": 1,
+  "title": "Updated Post",
+  "content": "This is the content of my first post.",
+  "tags": ["introduction", "welcome"],
+  "images": ["uploads/media-1712345678903-111111111.png"],
+  "videos": [],
+  "authorId": 2,
+  "author": {
+    "id": 2,
+    "name": "Jane Doe",
+    "email": "jane@example.com"
+  },
+  "createdAt": "2024-07-24T12:34:56.789Z",
+  "updatedAt": "2024-07-24T12:40:00.000Z"
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="GET" path="/posts">
+      <summary>Get all posts</summary>
+      <authentication>Not required</authentication>
+      <contentType>application/json</contentType>
+      <validation>
+        <!-- No body fields required -->
+      </validation>
+      <requestExample>
+        <![CDATA[
+GET /posts
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+[
+  {
+    "id": 1,
+    "title": "My First Post",
+    "content": "This is the content of my first post.",
+    "tags": ["introduction", "welcome"],
+    "images": ["uploads/media-1712345678901-123456789.png"],
+    "videos": ["uploads/media-1712345678902-987654321.mp4"],
+    "authorId": 2,
+    "author": {
+      "id": 2,
+      "name": "Jane Doe",
+      "email": "jane@example.com"
+    },
+    "createdAt": "2024-07-24T12:34:56.789Z",
+    "updatedAt": "2024-07-24T12:34:56.789Z"
+  }
+]
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="GET" path="/posts/:id">
+      <summary>Get a post by ID</summary>
+      <authentication>Not required</authentication>
+      <contentType>application/json</contentType>
+      <validation>
+        <field name="id" type="number" required="true" location="url" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+GET /posts/1
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "id": 1,
+  "title": "My First Post",
+  "content": "This is the content of my first post.",
+  "tags": ["introduction", "welcome"],
+  "images": ["uploads/media-1712345678901-123456789.png"],
+  "videos": ["uploads/media-1712345678902-987654321.mp4"],
+  "authorId": 2,
+  "author": {
+    "id": 2,
+    "name": "Jane Doe",
+    "email": "jane@example.com"
+  },
+  "createdAt": "2024-07-24T12:34:56.789Z",
+  "updatedAt": "2024-07-24T12:34:56.789Z"
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="DELETE" path="/posts/:id">
+      <summary>Delete a post</summary>
+      <authentication>Required</authentication>
+      <contentType>application/json</contentType>
+      <validation>
+        <field name="id" type="number" required="true" location="url" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+DELETE /posts/1
+Headers:
+  Authorization: Bearer <token>
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "message": "Post deleted"
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+  </resource>
+</api>

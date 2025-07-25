@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api>
+  <resource name="Comment">
+    <description>
+      Endpoints for creating, updating, retrieving, and deleting comments. 
+      Comments can include optional text and media (images/gifs).
+      All endpoints except GET require authentication via Bearer token.
+    </description>
+
+    <endpoint method="POST" path="/comments">
+      <summary>Create a new comment</summary>
+      <authentication>Required</authentication>
+      <contentType>multipart/form-data</contentType>
+      <validation>
+        <field name="postId" type="number" required="true" />
+        <field name="content" type="string" required="false" allowEmpty="true" />
+        <field name="media" type="file[]" required="false" description="One or more image/gif files" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+POST /comments
+Headers:
+  Authorization: Bearer &lt;token&gt;
+Body (form-data):
+  postId: 1
+  content: "Nice post!"
+  media: (file) image1.png
+  media: (file) funny.gif
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "id": 10,
+  "content": "Nice post!",
+  "media": [
+    "uploads/media-1712345678901-123456789.png",
+    "uploads/media-1712345678902-987654321.gif"
+  ],
+  "postId": 1,
+  "authorId": 2,
+  "author": {
+    "id": 2,
+    "name": "Jane Doe",
+    "email": "jane@example.com"
+  },
+  "createdAt": "2024-07-24T12:34:56.789Z",
+  "updatedAt": "2024-07-24T12:34:56.789Z"
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="PUT" path="/comments/:id">
+      <summary>Update a comment</summary>
+      <authentication>Required</authentication>
+      <contentType>multipart/form-data</contentType>
+      <validation>
+        <field name="content" type="string" required="false" allowEmpty="true" />
+        <field name="media" type="file[]" required="false" description="New image/gif files" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+PUT /comments/10
+Headers:
+  Authorization: Bearer &lt;token&gt;
+Body (form-data):
+  content: "Updated comment!"
+  media: (file) newimage.png
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "id": 10,
+  "content": "Updated comment!",
+  "media": [
+    "uploads/media-1712345678903-111111111.png"
+  ],
+  "postId": 1,
+  "authorId": 2,
+  "author": {
+    "id": 2,
+    "name": "Jane Doe",
+    "email": "jane@example.com"
+  },
+  "createdAt": "2024-07-24T12:34:56.789Z",
+  "updatedAt": "2024-07-24T12:40:00.000Z"
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="GET" path="/comments/post/:postId">
+      <summary>Get all comments for a post</summary>
+      <authentication>Not required</authentication>
+      <contentType>application/json</contentType>
+      <validation>
+        <field name="postId" type="number" required="true" location="url" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+GET /comments/post/1
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+[
+  {
+    "id": 10,
+    "content": "Nice post!",
+    "media": [
+      "uploads/media-1712345678901-123456789.png"
+    ],
+    "postId": 1,
+    "authorId": 2,
+    "author": {
+      "id": 2,
+      "name": "Jane Doe",
+      "email": "jane@example.com"
+    },
+    "createdAt": "2024-07-24T12:34:56.789Z",
+    "updatedAt": "2024-07-24T12:34:56.789Z"
+  }
+]
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="DELETE" path="/comments/:id">
+      <summary>Delete a comment</summary>
+      <authentication>Required</authentication>
+      <contentType>application/json</contentType>
+      <validation>
+        <field name="id" type="number" required="true" location="url" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+DELETE /comments/10
+Headers:
+  Authorization: Bearer &lt;token&gt;
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "message": "Comment deleted"
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+  </resource>
+</api> 

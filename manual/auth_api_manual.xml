@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api>
+  <resource name="Auth">
+    <description>
+      Endpoints for user authentication: signup, login, and logout.
+      All endpoints use JSON except logout, which requires the token in the Authorization header.
+    </description>
+
+    <endpoint method="POST" path="/auth/signup">
+      <summary>Register a new user</summary>
+      <authentication>Not required</authentication>
+      <contentType>application/json</contentType>
+      <validation>
+        <field name="name" type="string" required="true" />
+        <field name="email" type="string" required="true" />
+        <field name="password" type="string" required="true" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+POST /auth/signup
+Content-Type: application/json
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "password": "supersecret"
+}
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "id": 2,
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="POST" path="/auth/login">
+      <summary>Login a user</summary>
+      <authentication>Not required</authentication>
+      <contentType>application/json</contentType>
+      <validation>
+        <field name="email" type="string" required="true" />
+        <field name="password" type="string" required="true" />
+      </validation>
+      <requestExample>
+        <![CDATA[
+POST /auth/login
+Content-Type: application/json
+{
+  "email": "jane@example.com",
+  "password": "supersecret"
+}
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "id": 2,
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+
+    <endpoint method="POST" path="/auth/logout">
+      <summary>Logout a user (invalidate token)</summary>
+      <authentication>Required</authentication>
+      <contentType>application/json</contentType>
+      <validation>
+        <!-- No body fields required; token must be in Authorization header -->
+      </validation>
+      <requestExample>
+        <![CDATA[
+POST /auth/logout
+Headers:
+  Authorization: Bearer <token>
+        ]]>
+      </requestExample>
+      <responseExample>
+        <![CDATA[
+{
+  "message": "Logged out successfully"
+}
+        ]]>
+      </responseExample>
+    </endpoint>
+  </resource>
+</api>
